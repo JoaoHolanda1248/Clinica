@@ -9,8 +9,8 @@ enum Especialidade
     CARDIOLOGISTA,
     CLINICO,
     PEDIATRA,
-    OFTAMOLOGISTA,
-    ORDONTOLOGISTA
+    OFTALMOLOGISTA,
+    ODONTOLOGISTA
 
 };
 
@@ -34,19 +34,54 @@ void addmedico()
 
     struct Medico medico;
     char continuar;
-    
+    int op_medico;
+
     do
     {
         printf("Nome do médico: ");
-        scanf(" %s", medico.Nome);
+        scanf(" %99s", medico.Nome);
 
         printf("CRM: ");
-        scanf(" %s", medico.CRM);
+        scanf(" %19s", medico.CRM);
 
         printf("Telefone: ");
-        scanf(" %s", medico.Telefone);
-        
-        
+        scanf(" %19s", medico.Telefone);
+
+        printf("Especialidade:\n");
+        printf("[1] CARDIOLOGISTA\n");
+        printf("[2] CLÍNICO\n");
+        printf("[3] PEDIATRA\n");
+        printf("[4] OFTALMOLOGISTA\n");
+        printf("[5] ODONTOLOGISTA\n");
+        printf("Escolha uma opção: ");
+        scanf("%d", &op_medico);
+
+        switch (op_medico)
+        {
+        case 1:
+            medico.Espec = CARDIOLOGISTA;
+            strcpy(medico.Oficio, "CARDIOLOGISTA");
+            break;
+        case 2:
+            medico.Espec = CLINICO;
+            strcpy(medico.Oficio, "CLINICO");
+            break;
+        case 3:
+            medico.Espec = PEDIATRA;
+            strcpy(medico.Oficio, "PEDIATRA");
+            break;
+        case 4:
+            medico.Espec = OFTALMOLOGISTA;
+            strcpy(medico.Oficio, "OFTALMOLOGISTA");
+            break;
+        case 5:
+            medico.Espec = ODONTOLOGISTA;
+            strcpy(medico.Oficio, "ODONTOLOGISTA");
+            break;
+        default:
+            printf("Especialidade não cadastrada!\n");
+            continue; // volta ao início do laço
+        }
 
         fwrite(&medico, sizeof(struct Medico), 1, arquivo);
 
@@ -55,7 +90,6 @@ void addmedico()
     } while (continuar == 's' || continuar == 'S');
 
     fclose(arquivo);
-
 }
 
 void lermedicos()
@@ -75,7 +109,7 @@ void lermedicos()
     {
         printf("Nome: %s\n", medico.Nome);
         printf("CRM: %s\n", medico.CRM);
-        printf("Especialidade: %d\n", medico.Oficio);
+        printf("Especialidade: %s\n", medico.Oficio);
         printf("Telefone: %s\n", medico.Telefone);
         printf("----------------------------\n");
     }
@@ -102,15 +136,7 @@ void deletemedico()
 
     struct Medico medico;
 
-    printf("Médicos cadastrados:\n");
-    while (fread(&medico, sizeof(struct Medico), 1, arquivo))
-    {
-        printf("Nome: %s\n", medico.Nome);
-        printf("CRM: %s\n", medico.CRM);
-        printf("Especialidade: %d\n", medico.Espec);
-        printf("Telefone: %s\n", medico.Telefone);
-        printf("----------------------------\n");
-    }
+    lermedicos();
 
     char NomeBusca[100];
     int encontrado = 0;
@@ -164,15 +190,7 @@ void editmedico()
 
     struct Medico medico;
 
-    printf("Médicos cadastrados:\n");
-    while (fread(&medico, sizeof(struct Medico), 1, arquivo))
-    {
-        printf("Nome: %s\n", medico.Nome);
-        printf("CRM: %s\n", medico.CRM);
-        printf("Especialidade: %d\n", medico.Espec);
-        printf("Telefone: %s\n", medico.Telefone);
-        printf("----------------------------\n");
-    }
+    lermedicos();
 
     char NomeBusca[100];
     int encontrado = 0;
@@ -213,38 +231,39 @@ void editmedico()
                     scanf(" %99s", medico.CRM);
                     break;
                 case 3:
-                    printf("Especialidade: ");
+                    printf("Nova especialidade:\n");
                     printf("[1] CARDIOLOGISTA\n");
-                    printf("[2] CLINICO\n");
+                    printf("[2] CLÍNICO\n");
                     printf("[3] PEDIATRA\n");
-                    printf("[4] OFTAMOLOGISTA\n");
-                    printf("[5] ORDONTOLOGISTA\n");
-                    scanf("%d", op_medico);
+                    printf("[4] OFTALMOLOGISTA\n");
+                    printf("[5] ODONTOLOGISTA\n");
+                    printf("Escolha uma opção: ");
+                    scanf("%d", &op_medico);
+
                     switch (op_medico)
                     {
                     case 1:
                         medico.Espec = CARDIOLOGISTA;
+                        strcpy(medico.Oficio, "CARDIOLOGISTA");
                         break;
-
                     case 2:
                         medico.Espec = CLINICO;
+                        strcpy(medico.Oficio, "CLINICO");
                         break;
-
                     case 3:
                         medico.Espec = PEDIATRA;
+                        strcpy(medico.Oficio, "PEDIATRA");
                         break;
-
                     case 4:
-                        medico.Espec = OFTAMOLOGISTA;
+                        medico.Espec = OFTALMOLOGISTA;
+                        strcpy(medico.Oficio, "OFTALMOLOGISTA");
                         break;
-
                     case 5:
-                        medico.Espec = ORDONTOLOGISTA;
+                        medico.Espec = ODONTOLOGISTA;
+                        strcpy(medico.Oficio, "ODONTOLOGISTA");
                         break;
-
                     default:
-                        printf("Especialidade não cadastrada");
-                        break;
+                        printf("Especialidade não cadastrada!\n");
                     }
                     break;
                 case 4:
@@ -350,14 +369,7 @@ void editpaciente()
 
     struct Paciente paciente;
 
-    printf("Pacientes cadastrados:\n");
-    while (fread(&paciente, sizeof(struct Paciente), 1, arquivo))
-    {
-        printf("Nome: %s\n", paciente.Nome);
-        printf("CRM: %s\n", paciente.CPF);
-        printf("Telefone: %s\n", paciente.telefone);
-        printf("----------------------------\n");
-    }
+    lerpaciente();
 
     char NomeBusca[100];
     int encontrado = 0;
@@ -395,6 +407,68 @@ void editpaciente()
     fclose(arquivo);
 }
 
+void deletepaciente()
+{
+    FILE *arquivo = fopen("paciente.bin", "r+b");
+    if (arquivo == NULL)
+    {
+        printf("Erro ao abrir o arquivo!\n");
+        return;
+    }
+
+    FILE *temp = fopen("temp.bin", "wb");
+    if (temp == NULL)
+    {
+        printf("Erro ao criar o arquivo temporário!\n");
+        fclose(arquivo);
+        return;
+    }
+
+    struct Paciente paciente;
+
+    lerpaciente();
+
+    char NomeBusca[100];
+    int encontrado = 0;
+
+    rewind(arquivo); // voltar ao início para a edição
+
+    printf("Digite o nome do paciente que deseja excluir: ");
+    scanf(" %99s", NomeBusca); // espaço ignora \n pendente
+
+    while (fread(&paciente, sizeof(struct Paciente), 1, arquivo))
+    {
+        if (strcmp(paciente.Nome, NomeBusca) != 0)
+        {
+            // Se não for o médico que queremos excluir, escrevemos no novo arquivo
+            fwrite(&paciente, sizeof(struct Paciente), 1, temp);
+        }
+        else
+        {
+            encontrado = 1;
+        }
+    }
+
+    fclose(arquivo);
+    fclose(temp);
+
+    // Substitui o arquivo original pelo temporário
+    if (remove("paciente.bin") != 0 || rename("temp.bin", "paciente.bin") != 0)
+    {
+        printf("Erro ao substituir o arquivo original.\n");
+        return;
+    }
+
+    if (encontrado)
+    {
+        printf("Paciente removido com sucesso!\n");
+    }
+    else
+    {
+        printf("Paciente não encontrado!\n");
+    }
+}
+
 enum Status
 {
     AGENDADO,
@@ -410,7 +484,7 @@ struct Consulta
     char data_hora[100];
     enum Status status;
 };
-
+// Ver a parte dos enuns do médico
 void addconsulta()
 {
     FILE *arquivo = fopen("consulta.bin", "ab");
@@ -421,54 +495,88 @@ void addconsulta()
     }
 
     struct Consulta consulta;
+    struct Paciente paciente;
+    struct Medico medico;
     char continuar;
+
     do
     {
         printf("Identificador da consulta: ");
-        scanf(" %s", consulta.ID);
-        ///////////////////////////////
-        // Lista dos pacientes disponíveis
-        FILE *arquivo = fopen("paciente.bin", "rb");
-        if (arquivo == NULL)
-        {
-            printf("Erro ao abrir o arquivo!\n");
-            return;
-        }
+        scanf(" %19s", consulta.ID);
 
-        struct Paciente paciente;
+        // Mostrar pacientes disponíveis
+        lerpaciente();
 
-        printf("Pacientes cadastrados:\n");
+        char NomeBusca[100];
+        int encontrado = 0;
 
+        printf("Digite o nome do paciente da consulta: ");
+        scanf(" %99s", NomeBusca);
+
+        rewind(arquivo);
         while (fread(&paciente, sizeof(struct Paciente), 1, arquivo))
         {
-            printf("Nome: %s\n", paciente.Nome);
-            printf("CPF: %s\n", paciente.CPF);
-            printf("Telefone: %s\n", paciente.telefone);
-            printf("----------------------------\n");
+            if (strcmp(paciente.Nome, NomeBusca) == 0)
+            {
+                consulta.paciente = paciente; // Copia a struct inteira
+                encontrado = 1;
+                break;
+            }
         }
 
-        fclose(arquivo);
-        // Lista dos médicos disponíveis
+        if (!encontrado)
+        {
+            printf("Paciente não encontrado! Consulta não será registrada.\n");
+        }
+        else
+        {
+            printf("Médico para a consulta:");
+            lermedicos();
+            char NomeMedicoBusca[100];
+            // int medico_encontrado = 0;
 
-        //////////////////////////////////
-        printf("Data da consulta: ");
-        scanf(" %s", consulta.data_hora);
+            printf("Digite o nome do médico da consulta: ");
+            scanf(" %99s", NomeMedicoBusca);
+
+            rewind(arquivo);
+            while (fread(&medico, sizeof(struct Medico), 1, arquivo))
+            {
+                if (strcmp(medico.Nome, NomeMedicoBusca) == 0)
+                {
+                    consulta.medico = medico; // Copia a struct inteira
+                    encontrado = 1;
+                    break;
+                }
+            }
+
+            if (!encontrado)
+            {
+                printf("Paciente não encontrado! Consulta não será registrada.\n");
+            }
+
+            printf("Data e hora da consulta: ");
+            scanf(" %49s", consulta.data_hora);
+
+            fwrite(&consulta, sizeof(struct Consulta), 1, arquivo);
+            printf("Consulta registrada com sucesso!\n");
+        }
 
         printf("Deseja cadastrar outra consulta? (s/n): ");
         scanf(" %c", &continuar);
+
     } while (continuar == 's' || continuar == 'S');
 
     fclose(arquivo);
 }
 
+struct Relatorio
+{
+    struct Consulta consulta;
+};
 int main()
 {
     SetConsoleOutputCP(CP_UTF8);
 
-    /*
-        Filtro de paciente e aluno precisa de condição, ou um ou outro
-
-    */
     int opcao, opcao2;
     do
     {
@@ -506,8 +614,8 @@ int main()
                 break;
 
             case 4:
-                printf("Médicos cadastrados");
                 lermedicos();
+                break;
             default:
                 break;
             }
@@ -531,6 +639,7 @@ int main()
                 editpaciente();
                 break;
             case 3:
+                deletepaciente();
                 break;
             case 4:
                 lerpaciente();
@@ -540,7 +649,6 @@ int main()
             }
             break;
         case 3:
-            // Expplicar melhor essa parte
             printf("Seja bem vindo ao Gerenciamento de consultas, oque você deseja efetivar?\n");
             printf("[1] Agendar consulta\n");
             printf("[2] Cancelar consulta\n");
@@ -558,7 +666,7 @@ int main()
             printf("[5] Voltar para o menu principal\n");
             break;
         case 5:
-            printf("VOLTE SEMPRE");
+            printf("VOLTE SEMPRE\n");
             printf(":3");
             break;
         default:
